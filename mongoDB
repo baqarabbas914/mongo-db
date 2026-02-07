@@ -1,0 +1,47 @@
+Introduction to MongoDB
+What is MongoDB?
+MongoDB is a popular, open-source, NoSQL (Not Only SQL) document-oriented database that stores data in flexible, JSON-like documents rather than traditional rows and columns like relational databases. It's designed for scalability, flexibility, and ease of development.
+
+Key Characteristics
+1. Document-Oriented
+Stores data as BSON documents (Binary JSON)
+
+Each document is a self-contained data unit
+
+Documents can have nested structures
+
+Schema can vary from document to document
+
+2. NoSQL Database
+Non-relational
+
+No fixed table structure
+
+No SQL joins
+
+Horizontal scaling capability
+
+3. High Performance
+Rich query language
+
+Indexing support
+
+Aggregation framework
+
+In-memory processing capabilities
+
+Core Concepts
+Collections & Documents
+
+// Example of a MongoDB document
+{
+  "_id": ObjectId("507f1f77bcf86cd799439011"),
+  "name": "Alex Jones",
+  "age": 30,
+  "email": "jones@example.com",
+  "address": {
+    "street": "123 Main St",
+    "city": "New York"
+  },
+  "hobbies": ["reading", "gaming", "hiking"]
+}
