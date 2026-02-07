@@ -45,3 +45,148 @@ Collections & Documents
   },
   "hobbies": ["reading", "gaming", "hiking"]
 }
+
+Databases
+Containers for collections
+
+Each database has its own set of files on the filesystem
+
+A single MongoDB server can host multiple databases
+
+BSON Format
+Binary representation of JSON-like documents
+
+Supports additional data types (Date, Binary, ObjectId, etc.)
+
+Efficient encoding and decoding
+
+Key Features
+1. Flexible Schema
+
+// Two documents in the same collection can have different structures
+{ "name": "Alice", "age": 25 }
+{ "name": "Bob", "email": "bob@email.com", "active": true }
+
+2. Querying Capabilities
+
+// Find users older than 25
+db.users.find({ age: { $gt: 25 } })
+
+// Find by embedded document
+db.users.find({ "address.city": "New York" })
+
+// Text search
+db.articles.find({ $text: { $search: "mongodb tutorial" } })
+
+Basic Operations
+
+CRUD Operations
+
+// Create
+db.collection.insertOne({ name: "Alice" })
+db.collection.insertMany([{ name: "Bob" }, { name: "Charlie" }])
+
+// Read
+db.collection.findOne({ name: "Alice" })
+db.collection.find({ age: { $gt: 25 } })
+
+// Update
+db.collection.updateOne(
+  { name: "Alice" },
+  { $set: { age: 26 } }
+)
+
+// Delete
+db.collection.deleteOne({ name: "Bob" })
+
+When to Use MongoDB?
+Good Use Cases:
+Content Management Systems: Blogs, video platforms
+
+Real-time Analytics: IoT, gaming
+
+Mobile Apps: Flexible schema for varying devices
+
+Catalogs: E-commerce product catalogs
+
+Social Networks: User profiles, activity feeds
+
+Less Suitable For:
+Complex transactions requiring ACID properties
+
+Applications requiring complex joins
+
+Legacy systems tightly coupled to SQL
+
+Advantages vs Disadvantages
+Advantages:
+ Flexible schema design
+
+ Horizontal scalability
+
+ Fast development cycle
+
+ JSON/BSON data format (developer-friendly)
+
+ Rich query language
+
+ High performance for certain workloads
+
+Disadvantages:
+ Memory usage can be high
+
+ No built-in JOIN operations
+
+ Limited transaction support (improved in recent versions)
+
+ Data duplication possible
+
+ Learning curve for SQL developers
+
+Getting Started
+Installation Options:
+MongoDB Atlas (Cloud - Recommended for beginners)
+
+Community Edition (Local installation)
+
+Enterprise Edition (Commercial features)
+
+Basic Connection:
+javascript
+// Using MongoDB Node.js Driver
+const { MongoClient } = require('mongodb');
+const uri = "mongodb://localhost:27017";
+const client = new MongoClient(uri);
+
+async function connect() {
+  await client.connect();
+  console.log("Connected to MongoDB");
+}
+Best Practices
+Design documents based on access patterns
+
+Use appropriate indexes
+
+Implement connection pooling
+
+Monitor performance regularly
+
+Use $lookup for joins sparingly
+
+Consider data lifecycle management
+
+Secure your deployment properly
+
+Tools & Ecosystem
+MongoDB Compass: GUI for MongoDB
+
+MongoDB Atlas: Cloud database service
+
+MongoDB Charts: Data visualization
+
+MongoDB Realm: Mobile database and sync
+
+BI Connector: SQL interface for MongoDB
+
+Conclusion
+MongoDB is a powerful document database that excels in scenarios requiring flexibility, scalability, and rapid development. While it differs significantly from traditional relational databases, its document-oriented approach makes it intuitive for developers working with JSON and modern application stacks.
