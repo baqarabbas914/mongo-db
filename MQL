@@ -1,0 +1,122 @@
+MQL - MongoDB Query Language
+
+What is MQL?
+
+MQL is MongoDB’s proprietary query language used to interact with data stored in collections. It uses a JSON-like syntax to perform operations such as creating, reading, updating, and deleting documents, as well as running aggregations and complex queries. Unlike SQL, which is designed for relational databases, MQL is schema-flexible and works directly with MongoDB’s document model.
+
+MQL supports:
+
+CRUD commands (find, insertOne, updateMany, deleteOne, etc.)
+
+Aggregation pipelines with stages like $match, $group, $project
+
+Query predicates for filtering documents
+
+Update and projection operators for modifying and shaping results
+
+// Find all documents in a collection
+db.employees.find()
+// Find with filter and projection
+db.employees.find(
+ { "position.dept_name": "R&D" },
+ { emp_name: 1, "position.job_title": 1, job_rating: 1, _id: 0 }
+)
+
+Here, the first argument is the query filter, and the second is the projection specifying which fields to return.
+
+Comparison to SQL
+
+SQL: SELECT emp_name, job_title FROM employees WHERE dept_name = 'R&D';
+
+MQL:
+
+db.employees.find(
+ { "position.dept_name": "R&D" },
+ { emp_name: 1, "position.job_title": 1 }
+)
+
+MQL eliminates the need for joins in many cases by embedding related data within documents.
+
+Aggregation Example
+
+db.employees.aggregate([
+ { $match: { "position.dept_name": { $in: ["R&D", "IT"] } } },
+ { $group: { _id: "$position.dept_name", avg_rating: { $avg: "$job_rating" } } },
+ { $project: { _id: 0, dept_name: "$_id", avg_rating: { $round: ["$avg_rating", 1] } } }
+])
+
+This pipeline filters by department, groups by department name, calculates the average rating, and formats the output.
+
+Key Operators
+
+Comparison: $eq, $gt, $gte, $lt, $lte, $ne
+
+Logical: $and, $or, $not
+
+Element: $exists, $type
+
+Update: $set, $inc, $unset
+
+Array: $push, $pull, $elemMatch
+
+Why Use MQL?
+
+Schema flexibility – no fixed table structure
+
+Rich querying – supports nested fields and arrays
+
+Powerful aggregation – data transformation within the database
+
+JSON-like syntax – intuitive for developers familiar with JavaScript
+
+In short, MQL is the core interface for working with MongoDB data, enabling both simple lookups and advanced analytics directly within the database engine.
+
+Aggregations ??
+
+In MongoDB, aggregations are operations that process data records (documents) and return computed, summarized results. While a standard find() query retrieves documents, aggregations can group, sort, transform, and analyze data to provide insights like total sales, average values, or user counts. 
+The primary mechanism for this in MongoDB is the Aggregation Pipeline, which is part of the MongoDB Query Language (MQL). 
+
+1. What is an Aggregation Pipeline?
+An aggregation pipeline is a multi-stage framework designed to transform data. It functions like an assembly line: 
+Sequential Processing: Documents enter the pipeline and pass through a series of stages.
+Transformation: Each stage performs a specific operation (e.g., filtering, grouping, reshaping) on the input documents.
+Data Flow: The output of one stage acts as the input for the next, ultimately producing a final, summarized dataset. 
+
+Syntax:
+javascript
+db.collection.aggregate( [ { <stage1> }, { <stage2> }, ... ] )
+
+2. Core Stages of the Aggregation Pipeline
+Stages are organized in an array in the aggregate() method, and their order is crucial for performance. Common stages include: 
+Stage 	Description
+$match	Filters documents to allow only those matching specified conditions to pass to the next stage. Best practice: Use early in the pipeline to optimize performance.
+$group	Groups documents by a specified key (e.g., _id) and computes aggregations (sums, averages) on grouped data.
+$project	Reshapes documents—adds, removes, or renames fields.
+$sort	Orders documents by specified fields.
+$limit	Restricts the number of documents passed to the next stage.
+$lookup	Performs left outer joins to combine data from multiple collections.
+$unwind	Deconstructs an array field from input documents to output a document for each element.
+$addFields	Adds new fields to documents.
+3. MQL Aggregation Example
+Imagine a sales collection. To find the total sales amount per product, but only for "shipped" orders:
+javascript
+db.sales.aggregate([
+  // Stage 1: Filter by status
+  { $match: { status: "shipped" } },
+  
+  // Stage 2: Group by product and sum the amount
+  { $group: { _id: "$product", totalSales: { $sum: "$amount" } } },
+  
+  // Stage 3: Sort by totalSales descending
+  { $sort: { totalSales: -1 } }
+])
+
+4. Key Considerations (Performance & Limits)
+Order Matters: Placing $match at the beginning reduces the number of documents processed, significantly improving performance.
+Memory Limitation: Each stage is restricted to 100 megabytes of RAM. If a stage exceeds this, it will error unless allowDiskUse: true is enabled.
+Result Limitation: The final resulting document must be within the BSON Document Size limit, which is 16 megabytes.
+Alternatives: For simple, single-collection operations, single-purpose methods like count(), distinct(), and estimatedDocumentCount() can be used. 
+
+
+
+
