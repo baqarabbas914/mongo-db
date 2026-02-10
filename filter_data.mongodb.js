@@ -69,3 +69,54 @@ db.students.find({
     ]}
   ]
 })
+
+// ==================== PART 7: ARRAY OPERATORS ====================
+
+// 7.1 Find if array contains a value
+db.students.find({ courses: "CS101" })
+
+// 7.2 Find if array contains ALL values
+db.students.find({ courses: { $all: ["CS101", "MATH201"] } })
+
+// 7.3 Find by array size
+db.students.find({ courses: { $size: 3 } })
+
+// 7.4 Find by array position (element at specific index)
+db.students.find({ "courses.0": "CS101" })
+
+// ==================== PART 8: PROJECTION ====================
+// Selecting specific fields (1 = include, 0 = exclude)
+
+// 8.1 Include specific fields
+db.students.find({}, { name: 1, major: 1, gpa: 1 })
+
+// 8.2 Exclude specific fields
+db.students.find({}, { courses: 0, address: 0, email: 0 })
+
+// 8.3 Include with condition and projection
+db.students.find(
+  { major: "Computer Science" },
+  { name: 1, gpa: 1, _id: 0 }
+)
+
+Key Concepts to Emphasize:
+MQL is JavaScript-based - Uses JSON-like syntax
+
+No schema required - Collections are flexible
+
+Dot notation for nested fields: "address.city"
+
+Operators start with $: $gt, $in, $set
+
+Projection syntax: {field: 1} to include, {field: 0} to exclude
+
+Common Mistakes to Warn About:
+javascript
+// Wrong: db.students.find(age > 20)
+// Right: db.students.find({age: {$gt: 20}})
+
+// Wrong: db.students.update({name: "John"}, {age: 21})
+// Right: db.students.updateOne({name: "John"}, {$set: {age: 21}})
+
+// Wrong: db.students.find({address.city: "NYC"})
+// Right: db.students.find({"address.city": "NYC"})
